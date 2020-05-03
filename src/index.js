@@ -1,11 +1,6 @@
 import { Stanica } from "./models/Stanica.js";
+import { getSveStanice } from "./services/StanicaService.js";
 
-let stanice = new Array();
-stanice.push(new Stanica (1, 1000, 500, 120));
-stanice.push(new Stanica (2, 1100, 900, 110));
-stanice.push(new Stanica (3, 800, 300, 100));
-stanice.push(new Stanica (4, 1000, 100, 90));
-stanice.push(new Stanica (5, 1500, 1000, 50));
 
 crtajTabeluStanica(document.body);
 
@@ -29,10 +24,14 @@ function crtajTabeluStanica(host){
     
     tabelaStanica.appendChild(hederTabele);
     
-    
-    stanice.forEach(el => {
-        el.drawStanicaRow(tabelaStanica);
+    getSveStanice().then((stanice) => {
+        console.log(stanice);
+        stanice.forEach((stanica) => {console.log(stanica);
+            stanica.drawStanicaRow(tabelaStanica);
+        })
     })
-}
 
-console.log("Dotore");
+    // stanice.forEach(el => {
+    //     el.drawStanicaRow(tabelaStanica);
+    // })
+}

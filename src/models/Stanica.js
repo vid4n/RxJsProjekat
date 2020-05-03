@@ -38,4 +38,13 @@ export class Stanica{
         
         this.stanjeEnergije += dodataEnergija;
     }
+
+    static createStanicaFromDTO(stanicaDTO){
+        return new Stanica(
+            stanicaDTO["id"],
+            stanicaDTO["kapacitetEnergije"],
+            stanicaDTO["stanjeEnergije"],
+            stanicaDTO["cenaPoJedinici"]
+        );
+    }
 }

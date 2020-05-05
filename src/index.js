@@ -1,9 +1,12 @@
 import { Stanica } from "./models/Stanica.js";
-import { getSveStanice } from "./services/StanicaService.js";
+import { getSveStanice, getStanicaById } from "./services/StanicaService.js";
 
 
 crtajTabeluStanica(document.body);
 
+getStanicaById(1);
+
+//POMOCNE FUNKCIJE 
 
 function crtajTabeluStanica(host){
 
@@ -11,7 +14,7 @@ function crtajTabeluStanica(host){
 
     host.appendChild(tabelaStanica);
     
-    let kolone = ["ID", "Kapacitet", "Stanje", "Cena"];
+    let kolone = ["ID", "Kapacitet", "Stanje", "Cena", "Zarada"];
     
     const hederTabele = document.createElement("tr");
     
@@ -25,13 +28,12 @@ function crtajTabeluStanica(host){
     tabelaStanica.appendChild(hederTabele);
     
     getSveStanice().then((stanice) => {
-        console.log(stanice);
-        stanice.forEach((stanica) => {console.log(stanica);
+        stanice.forEach((stanica) => {
             stanica.drawStanicaRow(tabelaStanica);
         })
     })
+}
 
-    // stanice.forEach(el => {
-    //     el.drawStanicaRow(tabelaStanica);
-    // })
+function crtajStanicu(id ,host){
+    
 }

@@ -4,25 +4,29 @@
             "id" : 1,
             "kapacitetEnergije" : 1000,
             "stanjeEnergije" : 500,
-            "cenaPoJedinici" : 120
+            "cenaPoJedinici" : 120,
+            "zaradaStanice" : 0
         },
         {
             "id" : 2,
             "kapacitetEnergije" : 1100,
             "stanjeEnergije" : 450,
-            "cenaPoJedinici" : 110
+            "cenaPoJedinici" : 110,
+            "zaradaStanice" : 0
         },
         {
             "id" : 3,
             "kapacitetEnergije" : 1200,
             "stanjeEnergije" : 100,
-            "cenaPoJedinici" : 100
+            "cenaPoJedinici" : 100,
+            "zaradaStanice" : 0
         },
         {
             "id" : 4,
             "kapacitetEnergije" : 1500,
             "stanjeEnergije" : 1200,
-            "cenaPoJedinici" : 90
+            "cenaPoJedinici" : 90,
+            "zaradaStanice" : 0
         }
     ],
 

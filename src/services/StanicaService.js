@@ -14,3 +14,10 @@ export async function getSveStanice(){
 
     return stanice;
 }
+
+export async function getStanicaById(id){
+    const response = await fetch(dbURL+ "stanice/" + id);
+    const stanicaJson = await response.json(); 
+    
+    return stanicaJson;
+}

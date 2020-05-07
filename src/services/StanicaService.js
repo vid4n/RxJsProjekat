@@ -5,20 +5,6 @@ import { debounceTime, map, switchMap, mergeMap } from "rxjs/operators";
 
 const dbURL = "http://localhost:3000/";
 
-
-//async-fetch
-export async function getSveStanice(){
-    const response = await fetch(dbURL + "stanice");
-    const nizStanicaJson = await response.json();
-
-    let stanice = nizStanicaJson.map(StanicaDTO => 
-        Stanica.createStanicaFromDTO(StanicaDTO)
-    );
-    
-    return stanice;
-}
-
-//Observable
 export function getStanice(){
     return from(
         fetch(dbURL + "stanice")
@@ -28,9 +14,24 @@ export function getStanice(){
     );
 }
 
-export async function getStanicaById(id){
-    const response = await fetch(dbURL+ "stanice/" + id);
-    const stanicaJson = await response.json(); 
-       
-    return stanicaJson;
+export function getStanicaById(id){
+    // const response = await fetch(dbURL+ "stanice/" + id);
+    // const stanicaJson = await response.json();  
+    // return stanicaJson;
+    return from(
+        fetch(dbURL + "stanice/" + id)
+            .then(response => {
+                return response.json()
+            })
+    )
+}
+
+export  function createStanicaFromDTO(stanicaDTO){
+    return new Stanica(
+        stanicaDTO["id"],
+        stanicaDTO["kapacitet"],
+        stanicaDTO["stanje"],
+        stanicaDTO["cpj"],
+        stanicaDTO["zarada"]
+    );
 }

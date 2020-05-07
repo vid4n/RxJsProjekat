@@ -1,19 +1,3 @@
-// const path = require('path');
-
-// module.exports = {
-//   entry: './src/index.js',
-//   devtool: 'inline-source-map',
-//   // devServer: {
-//   //   contentBase: './dist',
-//   // },
-//   output: {
-//     path: path.resolve(__dirname, 'dist'),
-//     filename: 'bundle.js',
-//   },
-//   devServer: {
-//     contentBase: './',
-//   },
-// };
 const path = require ('path');
 
 module.exports = {
@@ -21,6 +5,9 @@ module.exports = {
   entry: ['@babel/polyfill', './src/index.js'],
 
   devtool: 'inline-source-map',
+  resolve: {
+    extensions: ['.ts', '.js', '.json']
+  },
   output: {
     path: path.resolve (__dirname, 'dist'),
     filename: 'bundle.js',
@@ -31,9 +18,8 @@ module.exports = {
   module: {
     rules: [
       {
-        //kako ce se obraditi fajlovi
-        test: /\.js$/, //regularni izraz $-ako se string zavrsava sa tom reci
-        exclude: /(node_modules|bower_components)/, //da ne trazi node_modules jer ima mng fajlova
+        test: /\.js$/,
+        exclude: /(node_modules|bower_components)/, 
         use: {
           loader: 'babel-loader',
           options: {
@@ -41,6 +27,9 @@ module.exports = {
           },
         },
       },
+      {
+        test: /\.ts$/, loader: "ts-loader"
+      }
     ],
   },
 };

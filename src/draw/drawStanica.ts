@@ -1,41 +1,43 @@
-import { getStanicaById, getStanice } from "../services/StanicaService.js";
+import { getStanicaById, getStanice } from "../services/StanicaService";
+import { map } from "rxjs/operators";
+import { Stanica } from "../models/Stanica";
 
-export function crtajStanicu(id, host){
+export function crtajStanicu(id: number, host: HTMLDivElement): void{
     //const stanica = getStanicaById(id);
 
     getStanicaById(id).subscribe(stanica => {
 
-        const stanicaDiv = document.createElement("div");
+        const stanicaDiv: HTMLDivElement = document.createElement("div");
         stanicaDiv.className = "stanicaDiv";
 
         host.appendChild(stanicaDiv);
 
-        const infoDiv = document.createElement("div");
+        const infoDiv: HTMLDivElement = document.createElement("div");
         infoDiv.className = "infoDiv";
 
-        const autoDiv = document.createElement("div");
+        const autoDiv: HTMLDivElement = document.createElement("div");
         autoDiv.className = "autoDiv";
 
         stanicaDiv.appendChild(infoDiv);
         stanicaDiv.appendChild(autoDiv);
 
-        const inputStanicaDiv = document.createElement("div");
-        const baterijaStanicaDiv =  document.createElement("div");
+        const inputStanicaDiv: HTMLDivElement = document.createElement("div");
+        const baterijaStanicaDiv: HTMLDivElement =  document.createElement("div");
 
         infoDiv.appendChild(inputStanicaDiv);
         infoDiv.appendChild(baterijaStanicaDiv);
 
-        const inputAutoDiv = document.createElement("div");
-        const baterijaAutoDiv =  document.createElement("div");
+        const inputAutoDiv: HTMLDivElement = document.createElement("div");
+        const baterijaAutoDiv: HTMLDivElement =  document.createElement("div");
         
         autoDiv.appendChild(inputAutoDiv);
         autoDiv.appendChild(baterijaAutoDiv);
 
-        const idStaniceDiv =  document.createElement("div");
-        const kapacitetStaniceDiv =  document.createElement("div");
-        const stanjeStaniceDiv =  document.createElement("div");
-        const cenaStaniceDiv =  document.createElement("div");
-        const zaradaStaniceDiv = document.createElement("div");
+        const idStaniceDiv: HTMLDivElement =  document.createElement("div");
+        const kapacitetStaniceDiv: HTMLDivElement =  document.createElement("div");
+        const stanjeStaniceDiv: HTMLDivElement =  document.createElement("div");
+        const cenaStaniceDiv: HTMLDivElement =  document.createElement("div");
+        const zaradaStaniceDiv: HTMLDivElement = document.createElement("div");
 
         inputStanicaDiv.appendChild(idStaniceDiv);
         inputStanicaDiv.appendChild(kapacitetStaniceDiv);
@@ -43,14 +45,14 @@ export function crtajStanicu(id, host){
         inputStanicaDiv.appendChild(cenaStaniceDiv);
         inputStanicaDiv.appendChild(zaradaStaniceDiv);
 
-        const idLabel = document.createElement("label");
+        const idLabel: HTMLLabelElement = document.createElement("label");
         idLabel.innerHTML = "ID:" + stanica.id;
         idStaniceDiv.appendChild(idLabel);
 
-        const kapacitetLabel = document.createElement("label");
+        const kapacitetLabel: HTMLLabelElement = document.createElement("label");
         kapacitetLabel.innerHTML = "Kapacitet: " + stanica.kapacitet;
 
-        const povecajKapacitetButton = document.createElement("button");
+        const povecajKapacitetButton: HTMLButtonElement = document.createElement("button");
         povecajKapacitetButton.innerHTML = "Povecaj";
         povecajKapacitetButton.onclick = (ev) => {
         console.log("Povecavanje kapaciteta");
@@ -59,10 +61,10 @@ export function crtajStanicu(id, host){
         kapacitetStaniceDiv.appendChild(kapacitetLabel);
         kapacitetStaniceDiv.appendChild(povecajKapacitetButton);
 
-        const stanjeLabel = document.createElement("label");
+        const stanjeLabel: HTMLLabelElement = document.createElement("label");
         stanjeLabel.innerHTML = "Stanje: " + stanica.stanje;
 
-        const napuniStanicuDugme = document.createElement("button");
+        const napuniStanicuDugme: HTMLButtonElement = document.createElement("button");
         napuniStanicuDugme.innerHTML = "Napuni";
         napuniStanicuDugme.onclick = (ev) =>{
             console.log("Punjenje stanice...");
@@ -71,10 +73,10 @@ export function crtajStanicu(id, host){
         stanjeStaniceDiv.appendChild(stanjeLabel);
         stanjeStaniceDiv.appendChild(napuniStanicuDugme);
 
-        const cenaLabel = document.createElement("label");
+        const cenaLabel: HTMLLabelElement = document.createElement("label");
         cenaLabel.innerHTML = "Cena: " + stanica.cpj;
 
-        const zameniCenuButton = document.createElement("button");
+        const zameniCenuButton: HTMLButtonElement = document.createElement("button");
         zameniCenuButton.innerHTML = "Zameni";
         zameniCenuButton.onclick = (ev) => {
             console.log("Menjanje cene");
@@ -86,10 +88,10 @@ export function crtajStanicu(id, host){
         cenaStaniceDiv.appendChild(cenaLabel);
         cenaStaniceDiv.appendChild(zameniCenuButton);
 
-        const zaradaLabel = document.createElement("label");
+        const zaradaLabel: HTMLLabelElement = document.createElement("label");
         zaradaLabel.innerHTML = "Zarada: " + stanica.zarada;
 
-        const zaradaButton = document.createElement("button");
+        const zaradaButton: HTMLButtonElement = document.createElement("button");
         zaradaButton.innerHTML = "Preuzmi";
         zaradaButton.onclick = (ev) => {
             console.log("Preuzimanje zarade...")
@@ -101,45 +103,46 @@ export function crtajStanicu(id, host){
     })
 }
 
-export function drawStanicaRow(stanica, host){
+export function drawStanicaRow(stanica: Stanica, host: HTMLDivElement): void{
     if(!host)
-        throw new error("Nije prosledjen host");
+        throw new Error("Nije prosledjen host");
 
-    const stanicaRow = document.createElement("tr");
+    const stanicaRow: HTMLTableRowElement = document.createElement("tr");
+    console.log(stanica);
 
     let atributi = [stanica.id, stanica.kapacitet, stanica.stanje, stanica.cpj, stanica.zarada];
 
     atributi.forEach(el => {
-        const podatak = document.createElement("td");
-        podatak.innerHTML = el;
+        const podatak: HTMLTableDataCellElement = document.createElement("td");
+        podatak.innerHTML = el.toString();
         stanicaRow.appendChild(podatak);
     })
 
     host.appendChild(stanicaRow);
 }
 
-export function crtajSveStanice(host){
-    const staniceContainer = document.createElement("div");
+export function crtajSveStanice(host: HTMLElement): void{
+    const staniceContainer: HTMLDivElement = document.createElement("div");
     host.appendChild(staniceContainer);
 
-    let idovi = [1,2,3,4];
-    idovi.forEach(id => {
+    let idovi: number[] = [1,2,3,4];
+    idovi.forEach((id: number) => {
         crtajStanicu(id,staniceContainer);
     })
 }
 
-export function crtajTabeluStanica(host){
+export function crtajTabeluStanica(host: HTMLElement){
 
-    const tabelaStanica = document.createElement("table");
+    const tabelaStanica: HTMLTableElement = document.createElement("table");
 
     host.appendChild(tabelaStanica);
     
-    let kolone = ["ID", "Kapacitet", "Stanje", "Cena", "Zarada"];
+    let kolone: string[] = ["ID", "Kapacitet", "Stanje", "Cena", "Zarada"];
     
     const hederTabele = document.createElement("tr");
     
-    kolone.forEach(el => {
-        const kolona = document.createElement("th");
+    kolone.forEach((el: string) => {
+        const kolona: HTMLTableHeaderCellElement = document.createElement("th");
         kolona.innerHTML = el;
         
         hederTabele.appendChild(kolona);
@@ -148,7 +151,7 @@ export function crtajTabeluStanica(host){
     tabelaStanica.appendChild(hederTabele);
 
     getStanice().subscribe((stanice) => {
-        stanice.map((stanica) => {
+            stanice. map((stanica: Response) => {
             drawStanicaRow(stanica,tabelaStanica);
         })
     })

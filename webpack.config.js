@@ -2,11 +2,11 @@ const path = require ('path');
 
 module.exports = {
   mode: 'development',
-  entry: ['@babel/polyfill', './src/index.js'],
+  entry: ['@babel/polyfill', './src/index.ts'],
 
   devtool: 'inline-source-map',
   resolve: {
-    extensions: ['.ts', '.js', '.json']
+    extensions: ['.webpack.js', '.web.js', '.ts', '.tsx', '.js'],
   },
   output: {
     path: path.resolve (__dirname, 'dist'),
@@ -18,17 +18,14 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.(js|ts)$/,
         exclude: /(node_modules|bower_components)/, 
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env'],
+            presets: ['@babel/preset-env', '@babel/typescript'],
           },
         },
-      },
-      {
-        test: /\.ts$/, loader: "ts-loader"
       }
     ],
   },

@@ -1,43 +1,41 @@
-import { getStanicaById, getStanice } from "../services/StanicaService";
+import { getStanicaById, getStanice, mozeSeIzvrsitiPunjenje } from "../services/StanicaService";
 import { map } from "rxjs/operators";
 import { Stanica } from "../models/Stanica";
+import { getVoziloById } from "../services/VoziloService";
+import { obaviPunjenje } from "../services/UpdateService";
 
 export function crtajStanicu(id: number, host: HTMLDivElement): void{
     //const stanica = getStanicaById(id);
-
+    
     getStanicaById(id).subscribe(stanica => {
+
+        const stanicaVoziloDiv:HTMLDivElement = document.createElement("div");
+        stanicaVoziloDiv.className = "stanicaVoziloDiv";
+        host.appendChild(stanicaVoziloDiv);
 
         const stanicaDiv: HTMLDivElement = document.createElement("div");
         stanicaDiv.className = "stanicaDiv";
 
-        host.appendChild(stanicaDiv);
-
-        const infoDiv: HTMLDivElement = document.createElement("div");
-        infoDiv.className = "infoDiv";
-
-        const autoDiv: HTMLDivElement = document.createElement("div");
-        autoDiv.className = "autoDiv";
-
-        stanicaDiv.appendChild(infoDiv);
-        stanicaDiv.appendChild(autoDiv);
+        stanicaVoziloDiv.appendChild(stanicaDiv);
 
         const inputStanicaDiv: HTMLDivElement = document.createElement("div");
+        inputStanicaDiv.className = "inputStanicaDiv"
         const baterijaStanicaDiv: HTMLDivElement =  document.createElement("div");
+        baterijaStanicaDiv.className = "baterija";
 
-        infoDiv.appendChild(inputStanicaDiv);
-        infoDiv.appendChild(baterijaStanicaDiv);
-
-        const inputAutoDiv: HTMLDivElement = document.createElement("div");
-        const baterijaAutoDiv: HTMLDivElement =  document.createElement("div");
-        
-        autoDiv.appendChild(inputAutoDiv);
-        autoDiv.appendChild(baterijaAutoDiv);
+        stanicaDiv.appendChild(inputStanicaDiv);
+        stanicaDiv.appendChild(baterijaStanicaDiv);
 
         const idStaniceDiv: HTMLDivElement =  document.createElement("div");
+        idStaniceDiv.className = "red";
         const kapacitetStaniceDiv: HTMLDivElement =  document.createElement("div");
+        kapacitetStaniceDiv.className = "red";
         const stanjeStaniceDiv: HTMLDivElement =  document.createElement("div");
+        stanjeStaniceDiv.className = "red";
         const cenaStaniceDiv: HTMLDivElement =  document.createElement("div");
+        cenaStaniceDiv.className = "red";
         const zaradaStaniceDiv: HTMLDivElement = document.createElement("div");
+        zaradaStaniceDiv.className = "red";
 
         inputStanicaDiv.appendChild(idStaniceDiv);
         inputStanicaDiv.appendChild(kapacitetStaniceDiv);
@@ -99,7 +97,123 @@ export function crtajStanicu(id: number, host: HTMLDivElement): void{
         zaradaStaniceDiv.appendChild(zaradaLabel);
         zaradaStaniceDiv.appendChild(zaradaButton);
  
-        //auto div
+        let visina: number = (stanica.stanje/stanica.kapacitet)*105;
+        let visinaString : string = visina.toString() + "px";
+        let boja: string;
+        if(visina > 55)
+            boja = "green";
+        else{
+            if(visina > 20  )
+                boja = "yellow";
+            else    
+                boja = "red";
+        }
+
+        baterijaStanicaDiv.style.height = visinaString;
+        baterijaStanicaDiv.style.backgroundColor = boja;
+        //----------------------------------------------------------------------------------------
+        const crta:HTMLDivElement = document.createElement("div");
+        crta.className = "crta";
+        stanicaVoziloDiv.appendChild(crta);
+        //-----------------------------------------------------------------------------------------
+        const voziloDiv: HTMLDivElement = document.createElement("div");
+        voziloDiv.className = "voziloDiv";
+        stanicaVoziloDiv.appendChild(voziloDiv);
+
+        const inputDiv: HTMLDivElement = document.createElement("div");
+        const baterijaDiv:HTMLDivElement = document.createElement("div");
+        baterijaDiv.className = "baterija"
+
+        voziloDiv.appendChild(inputDiv);
+        voziloDiv.appendChild(baterijaDiv);
+
+        const idDiv:HTMLDivElement = document.createElement("div");
+        idDiv.className = "red";
+        const kapacitetDiv:HTMLDivElement = document.createElement("div");
+        kapacitetDiv.className = "red";
+        const stanjeDiv: HTMLDivElement = document.createElement("div");
+        stanjeDiv.className = "red";
+        const kolicinaDiv:HTMLDivElement = document.createElement("div");
+        kolicinaDiv.className = "red";
+        const cenaDiv: HTMLDivElement = document.createElement("div");
+        cenaDiv.className = "red";
+        const buttonDiv:HTMLDivElement = document.createElement("div");
+        buttonDiv.className = "red";
+
+        inputDiv.appendChild(idDiv);
+        inputDiv.appendChild(kapacitetDiv);
+        inputDiv.appendChild(stanjeDiv);
+        inputDiv.appendChild(kolicinaDiv);
+        inputDiv.appendChild(cenaDiv);
+        inputDiv.appendChild(buttonDiv);
+
+        const idLabelVozilo:HTMLLabelElement = document.createElement("label");
+        idLabelVozilo.innerHTML = "ID: ";
+        const idInputVozilo:HTMLInputElement = document.createElement("input");
+        idInputVozilo.id = "idInputVozilo" + stanica.id.toString();
+        idDiv.appendChild(idLabelVozilo);
+        idDiv.appendChild(idInputVozilo);
+
+        const kolicinaLabelVozilo:HTMLLabelElement = document.createElement("label");
+        kolicinaLabelVozilo.innerHTML = "Kolicina: ";
+        const kolicinaInputVozilo:HTMLInputElement = document.createElement("input");
+        kolicinaInputVozilo.id = "kolicinaInputVozilo" + stanica.id.toString();
+        kolicinaDiv.appendChild(kolicinaLabelVozilo);
+        kolicinaDiv.appendChild(kolicinaInputVozilo);
+
+        const cenaLabelVozilo:HTMLLabelElement = document.createElement("label");
+        cenaLabelVozilo.innerHTML = "Cena: ";
+        cenaDiv.appendChild(cenaLabelVozilo);   
+
+        const checkButtonVozilo:HTMLButtonElement = document.createElement("button");
+        checkButtonVozilo.innerHTML = "Proveri  ";
+        checkButtonVozilo.onclick = (ev) => {
+            crtajBaterijuVozila(stanica.id.toString(), baterijaDiv)
+            console.log("Proveravam...");
+
+        }
+        buttonDiv.appendChild(checkButtonVozilo);
+
+        const napuniButtonVozilo:HTMLButtonElement = document.createElement("button");
+        napuniButtonVozilo.innerHTML = "Napuni";
+        napuniButtonVozilo.onclick = (ev) => {
+            var kolicinaZaPunjenjeInput = document.getElementById("kolicinaInputVozilo" + stanica.id) as HTMLInputElement;
+            var kolicinaZaPunjenje = parseInt(kolicinaZaPunjenjeInput.value)
+            mozeSeIzvrsitiPunjenje(stanica.id, parseInt(idInputVozilo.value), kolicinaZaPunjenje)
+            .subscribe(moze => {
+                if(moze){
+                    console.log("Moze")
+                    obaviPunjenje(stanica.id, parseInt(idInputVozilo.value), kolicinaZaPunjenje);
+                }
+                else console.log("Ne moze da se napuni toliko energije");
+            })
+        }
+        buttonDiv.appendChild(napuniButtonVozilo);
+
+        
+    })
+}
+
+function crtajBaterijuVozila(id: string, host: HTMLDivElement): void { //dovrsi 
+    let idVozilaString: string = (<HTMLInputElement>document.getElementById("idInputVozilo" + id)).value;
+    let idVozila: number = parseInt(idVozilaString);
+    getVoziloById(idVozila).subscribe(vozilo => {
+        
+
+        let visina: number = (vozilo.stanje/vozilo.kapacitet)*81;
+        let visinaString : string = visina.toString() + "px";
+        let boja: string;
+        if(visina > 40)
+            boja = "green";
+        else{
+            if(visina > 20  )
+                boja = "yellow";
+            else    
+                boja = "red";
+        }
+
+        host.style.height = visinaString;
+        host.style.backgroundColor = boja;
     })
 }
 
@@ -108,7 +222,6 @@ export function drawStanicaRow(stanica: Stanica, host: HTMLDivElement): void{
         throw new Error("Nije prosledjen host");
 
     const stanicaRow: HTMLTableRowElement = document.createElement("tr");
-    console.log(stanica);
 
     let atributi = [stanica.id, stanica.kapacitet, stanica.stanje, stanica.cpj, stanica.zarada];
 
@@ -122,6 +235,7 @@ export function drawStanicaRow(stanica: Stanica, host: HTMLDivElement): void{
 }
 
 export function crtajSveStanice(host: HTMLElement): void{
+
     const staniceContainer: HTMLDivElement = document.createElement("div");
     host.appendChild(staniceContainer);
 
@@ -151,8 +265,15 @@ export function crtajTabeluStanica(host: HTMLElement){
     tabelaStanica.appendChild(hederTabele);
 
     getStanice().subscribe((stanice) => {
-            stanice. map((stanica: Response) => {
+            stanice. map((stanica: Stanica) => {
             drawStanicaRow(stanica,tabelaStanica);
         })
     })
+}
+
+export function showView(host){
+    host.innerHTML = "";
+
+    crtajTabeluStanica(host);
+    crtajSveStanice(host);
 }

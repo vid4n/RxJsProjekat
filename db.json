@@ -1,36 +1,74 @@
 {
-    "stanice": [
-        {
-            "id" : 1,
-            "kapacitet" : 1000,
-            "stanje" : 500,
-            "cpj" : 120,
-            "zarada" : 0
-        },
-        {
-            "id" : 2,
-            "kapacitet" : 1100,
-            "stanje" : 450,
-            "cpj" : 110,
-            "zarada" : 0
-        },
-        {
-            "id" : 3,
-            "kapacitet" : 1200,
-            "stanje" : 100,
-            "cpj" : 100,
-            "zarada" : 0
-        },
-        {
-            "id" : 4,
-            "kapacitet" : 1500,
-            "stanje" : 1200,
-            "cpj" : 90,
-            "zarada" : 0 
-        }
-    ],
-
-    "vozila" : [
-
-    ]
+  "stanice": [
+    {
+      "id": 1,
+      "kapacitet": 1000,
+      "stanje": 410,
+      "cpj": 100,
+      "zarada": 9200
+    },
+    {
+      "id": 2,
+      "kapacitet": 1100,
+      "stanje": 434,
+      "cpj": 110,
+      "zarada": 1760
+    },
+    {
+      "id": 3,
+      "kapacitet": 1200,
+      "stanje": 0,
+      "cpj": 100,
+      "zarada": 10000
+    },
+    {
+      "id": 4,
+      "kapacitet": 1500,
+      "stanje": 1195,
+      "cpj": 90,
+      "zarada": 450
+    }
+  ],
+  "vozila": [
+    {
+      "id": 1,
+      "kapacitet": 100,
+      "stanje": 85
+    },
+    {
+      "id": 2,
+      "kapacitet": 110,
+      "stanje": 100
+    },
+    {
+      "id": 3,
+      "kapacitet": 100,
+      "stanje": 10
+    },
+    {
+      "id": 4,
+      "kapacitet": 90,
+      "stanje": 90
+    },
+    {
+      "id": 5,
+      "kapacitet": 80,
+      "stanje": 20
+    },
+    {
+      "id": 6,
+      "kapacitet": 85,
+      "stanje": 19
+    },
+    {
+      "id": 7,
+      "kapacitet": 100,
+      "stanje": 90
+    },
+    {
+      "id": 8,
+      "kapacitet": 100,
+      "stanje": 100
+    }
+  ]
 }

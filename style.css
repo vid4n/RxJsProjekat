@@ -1,0 +1,53 @@
+.stanicaVoziloDiv{
+    border: 2px solid black;    
+    width: 250px;
+    margin: 10px;
+}
+
+.stanicaDiv{
+    display: flex;
+    flex-direction: row;
+    width: 250px;
+    height: 105px;
+    justify-content: space-between;
+    align-items: flex-end;
+    
+}
+
+.voziloDiv{
+    display: flex;
+    flex-direction: row;
+    width: 250px;
+    height: 81px;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.crta{
+    width: 250px;
+    height: 1px;
+    background-color: black;
+}
+
+.inputStanicaDiv{
+    height: 105px;
+}
+
+.baterija{
+    width: 50px;   
+}
+
+.red{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 180px;
+}
+
+button{
+    width: 64px;
+}
+
+input{
+    width: 64px;
+}

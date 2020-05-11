@@ -8,12 +8,15 @@ export class Stanica{
     public cpj: number;
     public zarada: number;
 
-    constructor(id: number, kapacitet: number, stanje: number, cpj: number, zarada: number){
-        this.id = id;
-        this.kapacitet = kapacitet;
-        this.stanje = stanje;
-        this.cpj = cpj;
-        this.zarada = zarada;
+    constructor() {
+        
     }
+    // constructor(id: number, kapacitet: number, stanje: number, cpj: number, zarada: number){
+    //     this.id = id;
+    //     this.kapacitet = kapacitet;
+    //     this.stanje = stanje;
+    //     this.cpj = cpj;
+    //     this.zarada = zarada;
+    // }
 
 }

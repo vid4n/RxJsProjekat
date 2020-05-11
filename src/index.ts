@@ -1,5 +1,5 @@
-import { crtajSveStanice, crtajTabeluStanica } from "./draw/drawStanica";
+import { showView } from "./draw/drawStanica";
 
-crtajTabeluStanica(document.body);
+showView(document.body);
 
-crtajSveStanice(document.body);
+

@@ -36,6 +36,5 @@ export function voziloMozeDaPrimi(id:number, kolicina: number): Observable<any>{
                 return true;
             else return false;
         })
-
     )
 }

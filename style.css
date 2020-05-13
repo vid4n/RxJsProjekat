@@ -37,17 +37,84 @@
     width: 50px;   
 }
 
+.stanicaBaterija{
+    width: 50px; 
+    margin-left: 10px;
+    border-radius: 6%;
+}
+
+.stanica{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+}
 .red{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    width: 180px;
+
 }
 
 button{
-    width: 64px;
+    width: 75px;
 }
 
 input{
     width: 64px;
+}
+
+#stanicaForm{
+    display: flex;
+    flex-direction: column;
+    margin: 25px;
+
+    border: 1px solid black;
+    border-radius: 5%;
+    width: 422px;
+
+    padding: 5px;
+}
+
+.proveriBtn{
+    width:100px;
+}
+
+.red{
+    display: flex;
+    flex-direction: row; 
+    justify-content:space-between ;
+    width: 350px;
+}
+
+hr{
+    border-top: 1px solid black;
+}
+
+
+.form-inline .form-control {
+    display: inline-block;
+    width: 100px;
+    vertical-align: middle;
+}
+
+.labela{
+    width: 100px;
+}
+
+.fake{
+    width: 75px;
+}
+
+.fakeInput{
+    width:100px;
+}
+
+.divSveStanice{
+    display: flex;;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.voziloBaterija{
+    widows: 50px;
 }

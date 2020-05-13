@@ -1,5 +1,6 @@
-import { showView } from "./draw/drawStanica";
+import { showView2 } from "./draw/drawStanica";
+import { mozeSeIzvrsitiPunjenje } from "./services/StanicaService";
 
-showView(document.body);
 
+showView2(document.getElementById("startDiv"));       
 

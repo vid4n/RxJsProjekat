@@ -37,7 +37,7 @@ export function obaviPunjenje(idStanice: number, idVozila: number, kolicina: num
                 id: updatedId,
                 kapacitet: updatedKapacitet,
                 stanje: updatedStanje,
-                cpj: updatedCpj,
+                cpj: updatedCpj,    
                 zarada: updatedZarada
             }),
         }).then(() => {

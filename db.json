@@ -3,9 +3,9 @@
     {
       "id": 1,
       "kapacitet": 1000,
-      "stanje": 410,
+      "stanje": 400,
       "cpj": 100,
-      "zarada": 9200
+      "zarada": 10200
     },
     {
       "id": 2,
@@ -17,7 +17,7 @@
     {
       "id": 3,
       "kapacitet": 1200,
-      "stanje": 0,
+      "stanje": 200,
       "cpj": 100,
       "zarada": 10000
     },
@@ -33,7 +33,7 @@
     {
       "id": 1,
       "kapacitet": 100,
-      "stanje": 85
+      "stanje": 55
     },
     {
       "id": 2,

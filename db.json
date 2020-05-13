@@ -3,47 +3,82 @@
     {
       "id": 1,
       "kapacitet": 1000,
-      "stanje": 400,
+      "stanje": 233,
       "cpj": 100,
-      "zarada": 10200
+      "zarada": 148100
     },
     {
       "id": 2,
       "kapacitet": 1100,
-      "stanje": 434,
+      "stanje": 221,
       "cpj": 110,
-      "zarada": 1760
+      "zarada": 25190
     },
     {
       "id": 3,
       "kapacitet": 1200,
-      "stanje": 200,
+      "stanje": 189,
       "cpj": 100,
-      "zarada": 10000
+      "zarada": 11100
     },
     {
       "id": 4,
       "kapacitet": 1500,
-      "stanje": 1195,
+      "stanje": 638,
       "cpj": 90,
-      "zarada": 450
+      "zarada": 50580
+    },
+    {
+      "id": 5,
+      "kapacitet": 1500,
+      "stanje": 98,
+      "cpj": 90,
+      "zarada": 9000
+    },
+    {
+      "id": 6,
+      "kapacitet": 1400,
+      "stanje": 366,
+      "cpj": 90,
+      "zarada": 9000
+    },
+    {
+      "id": 7,
+      "kapacitet": 1000,
+      "stanje": 960,
+      "cpj": 90,
+      "zarada": 0
+    },
+    {
+      "id": 8,
+      "kapacitet": 1900,
+      "stanje": 1211,
+      "cpj": 90,
+      "zarada": 0
+    },
+    {
+      "id": 9,
+      "kapacitet": 1500,
+      "stanje": 246,
+      "cpj": 90,
+      "zarada": 9000
     }
   ],
   "vozila": [
     {
       "id": 1,
       "kapacitet": 100,
-      "stanje": 55
+      "stanje": 99
     },
     {
       "id": 2,
       "kapacitet": 110,
-      "stanje": 100
+      "stanje": 109
     },
     {
       "id": 3,
       "kapacitet": 100,
-      "stanje": 10
+      "stanje": 56
     },
     {
       "id": 4,
@@ -53,17 +88,17 @@
     {
       "id": 5,
       "kapacitet": 80,
-      "stanje": 20
+      "stanje": 30
     },
     {
       "id": 6,
       "kapacitet": 85,
-      "stanje": 19
+      "stanje": 85
     },
     {
       "id": 7,
       "kapacitet": 100,
-      "stanje": 90
+      "stanje": 0
     },
     {
       "id": 8,

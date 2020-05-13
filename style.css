@@ -79,6 +79,11 @@ input{
     width:100px;
 }
 
+.vozilo{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+}
 .red{
     display: flex;
     flex-direction: row; 

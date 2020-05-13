@@ -1,5 +1,5 @@
 import * as Rxjs from 'rxjs';
-import { fromEvent, from, zip, Observable } from "rxjs";
+import { fromEvent, from, zip, Observable, ObservableInput } from "rxjs";
 import { debounceTime, map, switchMap, mergeMap } from "rxjs/operators";
 import { Stanica } from '../models/Stanica';
 import { voziloMozeDaPrimi } from './VoziloService';
@@ -49,6 +49,22 @@ export function mozeSeIzvrsitiPunjenje(idStanice: number, idVozila: number, koli
             else return false;
         })
     );
+}
+
+export function odrediCenu(id:number, kolicina: number): Observable<any>{
+    let cena:number;
+    return from(
+        getStanicaById(id).toPromise()
+        .then((stanica: Stanica) => {
+            cena = stanica.cpj * kolicina;
+            console.log("Cena jeee " + cena);
+            return cena;
+            
+        })
+    )
+    
+
+
 }
 
 

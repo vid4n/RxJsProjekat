@@ -1,8 +1,10 @@
-import { getStanicaById, getStanice, mozeSeIzvrsitiPunjenje } from "../services/StanicaService";
-import { map } from "rxjs/operators";
+import { getStanicaById, getStanice, mozeSeIzvrsitiPunjenje, odrediCenu } from "../services/StanicaService";
+import { map, take, takeUntil } from "rxjs/operators";
 import { Stanica } from "../models/Stanica";
 import { getVoziloById } from "../services/VoziloService";
-import { obaviPunjenje } from "../services/UpdateService";
+import { obaviPunjenje, puniZaPet } from "../services/UpdateService";
+import { interval, from, timer } from "rxjs";
+import { Vozila } from "../models/Vozila";
 
 export function crtajStanicu(id: number, host: HTMLDivElement): void{
     //const stanica = getStanicaById(id);
@@ -168,7 +170,7 @@ export function crtajStanicu(id: number, host: HTMLDivElement): void{
         const checkButtonVozilo:HTMLButtonElement = document.createElement("button");
         checkButtonVozilo.innerHTML = "Proveri  ";
         checkButtonVozilo.onclick = (ev) => {
-            crtajBaterijuVozila(stanica.id.toString(), baterijaDiv);
+            //crtajBaterijuVozila(stanica.id.toString(), baterijaDiv);
             console.log("Proveravam...");
 
         }
@@ -194,29 +196,32 @@ export function crtajStanicu(id: number, host: HTMLDivElement): void{
     })
 }
 
-function crtajBaterijuVozila(id: number, idVozila: number, host: HTMLDivElement): void { 
-    setTimeout(()=>{
+export function crtajBaterijuVozila(idVozila: number, host: HTMLDivElement): void { 
+    
         
         console.log(idVozila);
         getVoziloById(idVozila).subscribe(vozilo => {
             
     
             let visina: number = (vozilo.stanje/vozilo.kapacitet)*81;
+            
             let visinaString : string = visina.toString() + "px";
             let boja: string;
             if(visina > 40)
-                boja = "green";
+                boja = "#33ff99";
             else{
                 if(visina > 20  )
-                    boja = "yellow";
+                    boja = "#ffff4d";
                 else    
-                    boja = "red";
+                    boja = "#ff5c33";
             }
     
             host.style.height = visinaString;
             host.style.backgroundColor = boja;
+            host.style.width = "50px";
+            host.style.marginLeft = "10px";
+            host.style.borderRadius = "6%";
         })
-    },600)
     
 }
 
@@ -310,7 +315,7 @@ export function crtajStanicu2(stanica:Stanica, host: HTMLDivElement): void {
 
         <div class="red">
         <div class="form-group mb-2 labela">
-            <label">Kapacitet</label>     
+            <label>Kapacitet</label>     
         </div>
         <div class="form-group mx-sm-3 mb-2">
             <input type="number" class="form-control" id="inputKapacitet" placeholder="kWh">
@@ -320,7 +325,7 @@ export function crtajStanicu2(stanica:Stanica, host: HTMLDivElement): void {
 
         <div class="red">
         <div class="form-group mb-2 labela">
-            <label]>Stanje</label>     
+            <label>Stanje</label>     
         </div>
         <div class="form-group mx-sm-3 mb-2">
             <input type="number" class="form-control" id="inputStanje" placeholder="kWh">
@@ -372,119 +377,134 @@ export function crtajStanicu2(stanica:Stanica, host: HTMLDivElement): void {
                        <label>Kolicina</label>     
                     </div>
                     <div class="form-group mx-sm-3 mb-2">
-                        <input type="number" class="form-control" id="inputKolicina" placeholder="kWh">
+                        <input type="number" class="form-control" id="inputKolicina${stanica.id.toString()}" placeholder="kWh">
                     </div>
-                    <div class="fake">
+                    <div class="fake" id="poruka${stanica.id.toString()}">
+                        
                     </div>
                 </div>
 
                 <div class="red">
                     <div class="form-group mb-2 labela">
-                        <label>Cena</label>     
+                        <label id="labelCena${stanica.id.toString()}">Cena</label>     
                     </div>
                     <div class="fakeInput" id="fakeInput${stanica.id.toString()}">
-                        <div id="promeniButton${stanica.id.toString()}" data-id="${stanica.id.toString()}" class=" promeniButton btn btn-primary mb-2">Promeni</div>
+                        <div id="proveriButton${stanica.id.toString()}" data-id="${stanica.id.toString()}" class=" proveriButton btn btn-primary mb-2">Proveri</div>
                     </div>
-                    <button type="submit" class="btn btn-primary mb-2">Napuni</button>
+                    <button type="submit" id="napuniVozilo${stanica.id.toString()}" class="btn btn-primary mb-2 napuniVozilo" data-id="${stanica.id.toString()}">Napuni</button>
                 </div>  
             </div>
 
-            <div class="voziloBaterija" id="voziloBaterija">
+            <div class="voziloBaterija" id="voziloBaterija${stanica.id.toString()}">
             </div>
         </div>
 
     </form>`
-
-    // const dugme:HTMLButtonElement = document.getElementById("btnProveri" + stanica.id.toString()) as HTMLButtonElement;
-    // console.log(dugme);
-    
-    // const bat: HTMLDivElement = document.getElementById("voziloBaterija") as HTMLDivElement;
-    // dugme.addEventListener("click", (event: Event) => {
-    //     console.log(dugme);
-    //     event.preventDefault();
-    //     let input:HTMLInputElement = document.createElement("input");
-    //     input = document.getElementById("inputID" + stanica.id.toString()) as HTMLInputElement;
-    //     console.log(input);
-    //     console.log(input.value);
-    //     let idVozilaString: string = input.value;
-    //     let idVozila = parseInt(idVozilaString);
-    //     console.log(idVozila);
-    //     crtajBaterijuVozila(stanica.id, idVozila, bat);
-    // })
-    // const dugme:HTMLButtonElement = document.getElementById("btnProveri" + stanica.id.toString()) as HTMLButtonElement;
-    // console.log(dugme);
-    // const bat: HTMLDivElement = document.getElementById("voziloBaterija") as HTMLDivElement;
-   
-    // dugme.onclick = ev =>{
-    //     console.log("aa");
-    //     ev.preventDefault();
-    //     let input:HTMLInputElement = document.createElement("input");
-    //     console.log(input);
-    //     input = document.getElementById("inputID" + stanica.id.toString()) as HTMLInputElement;
-    //     console.log(input);
-    //     let idVozilaString: string = input.value;
-    //     let idVozila = parseInt(idVozilaString);
-    //     console.log(idVozila);
-    // }
-    // const proveriDiv : HTMLDivElement = document.getElementById("fakeInput" + stanica.id.toString()) as HTMLDivElement;
-    // const proveriButton: HTMLButtonElement = document.createElement("button");
-    // proveriDiv.appendChild(proveriButton);
-    // proveriButton.id = "proveriButton" + stanica.id.toString();
-    // console.log(proveriButton);
-    // proveriButton.onclick = (ev) => {
-    //     ev.preventDefault();    
-    //     let inputEl = document.getElementById("inputID" + stanica.id.toString()) as HTMLInputElement;
-    //     let inputString = inputEl. value;
-    //     let idVozila = parseInt(inputString);
-    //     console.log(idVozila);
-    // }
-
-    //<button type="submit" class="btn btn-primary mb-2 proveriBtn" id="btnProveri${stanica.id.toString()}">Proveri</button>
-    // const nizDugmica = praviNizDugmica();
-    // dodajListenereDugmadima(nizDugmica, stanica.id);
-    // setTimeout(()=>{
-    //     dodajListenerDugmetu(proveriButton, stanica.id);
-    // },1000);
-    let button = document.getElementsByClassName("promeniButton")
-    //console.log(button);
     
 }
 
 function dodajListenerDugmicima(){
-    // console.log(dugme, idStanice);
-    // dugme.onclick = (ev) => {
-    //     ev.preventDefault();
-    //     console.log("brao");
-    //     // ev.preventDefault();    
-    //      // let inputEl = document.getElementById("inputID" + idStanice.toString()) as HTMLInputElement;
-    //      // let inputString = inputEl. value;
-    //      // let idVozila = parseInt(inputString);
-    //      // console.log(idVozila);
-    // }
-    let buttons:NodeListOf<Element> = document.querySelectorAll(".promeniButton");
-    console.log(buttons);
-    
-    // button[0].addEventListener("click", (event:Event) => {
-    //     console.log("aa");
-    // })
-    // button[1].addEventListener("click", (event:Event) => {
-    //     console.log("aa");
-    // })
-    // button[2].addEventListener("click", (event:Event) => {
-    //     console.log("aa");
-    // })
-    // button[3].addEventListener("click", (event:Event) => {
-    //     console.log("aa");
-    // })
-
+    let buttons:NodeListOf<Element> = document.querySelectorAll(".proveriButton");
     buttons.forEach((button)=>{
-        console.log(button);
+        
         button.addEventListener("click", (event:Event) => {
-                console.log("aa");
-                console.log(button.getAttribute("data-id"));
+            
+                let idStanice = parseInt(button.getAttribute("data-id"));
+
+                let inputId: HTMLInputElement =  document.getElementById("inputID" + idStanice) as HTMLInputElement;
+                let idVozilaString: string = inputId.value;
+                let idVozila: number = parseInt(idVozilaString);
+
+                let inputKolicina:HTMLInputElement = document.getElementById("inputKolicina" + idStanice) as HTMLInputElement;
+                let inputKolicinaString: string = inputKolicina.value;
+                let kolicina = parseInt(inputKolicinaString);
+
+                const divPoruke: HTMLDivElement = document.getElementById("poruka" + idStanice) as HTMLDivElement;
+
+                if(idVozilaString && inputKolicinaString){
+                    divPoruke.innerHTML ="";
+                    let cenaLabel: HTMLLabelElement = document.getElementById("labelCena" + idStanice) as HTMLLabelElement;
+                    odrediCenu(idStanice, kolicina).subscribe((cena:Number) => {
+                        cenaLabel.innerHTML = "Cena: " + cena.toString();
+                    })
+
+                    let divZaBateriju: HTMLDivElement = document.getElementById("voziloBaterija" + idStanice) as HTMLDivElement;
+                    crtajBaterijuVozila(idVozila, divZaBateriju);   
+                }
+                else{
+                    let stanicaDiv:HTMLDivElement = document.getElementById("stanicaForm") as HTMLDivElement;
+                    let divZaBateriju: HTMLDivElement = document.getElementById("voziloBaterija" + idStanice) as HTMLDivElement;
+                    divZaBateriju.style.backgroundColor = stanicaDiv.style. backgroundColor;
+                    divPoruke.style.color = "red";
+                    divPoruke.innerHTML = "Unesi sve!"
+                }
         })
     })
 }
+
+export function napuniVoziloListener(){
+    let buttons:NodeListOf<Element> = document.querySelectorAll(".napuniVozilo");
+    buttons.forEach((button) => {
+        button.addEventListener("click", (event:Event) => {
+            event.preventDefault(); 
+
+            event.preventDefault(); 
+            let idStanice = parseInt(button.getAttribute("data-id"));
+
+            let inputId: HTMLInputElement =  document.getElementById("inputID" + idStanice) as HTMLInputElement;
+            let idVozilaString: string = inputId.value;
+            let idVozila: number = parseInt(idVozilaString);
+
+            let inputKolicina:HTMLInputElement = document.getElementById("inputKolicina" + idStanice) as HTMLInputElement;
+            let inputKolicinaString: string = inputKolicina.value;
+            let kolicina = parseInt(inputKolicinaString);
+
+            let zaPunjenje:number;
+
+            getVoziloById(idVozila).subscribe((vozilo:Vozila) => {
+                let slobodno:number = vozilo.kapacitet - vozilo.stanje;
+                if(slobodno<kolicina)
+                    zaPunjenje = slobodno;
+                else zaPunjenje = kolicina;
+
+                if(zaPunjenje > 5)
+                    obaviPunjenje(idStanice, idVozila, zaPunjenje);
+            })
+            
+
+            console.log(idStanice, idVozila, kolicina);
+            //obaviPunjenje(idStanice, idVozila, kolicina);
+            const timerPregrevanje = timer(30000);
+           
+            setTimeout(() => {
+                let napunjeno: number = 0;
+                let zaTake: number = zaPunjenje / 5;
+
+                console.log("Za take: " + zaTake);
+
+                interval(1000)            
+                .pipe(
+                    map(() => {
+                        return from(getVoziloById(idVozila))
+                    }),
+                    take(zaTake),
+                    takeUntil(timerPregrevanje)                    
+                ).subscribe((obs) => {
+                    obs.subscribe((vozilo: Vozila) => {
+                        
+                        puniZaPet(idStanice, idVozila, zaPunjenje);
+                        napunjeno+=5;
+                        zaPunjenje -= 5;
+                        console.log(vozilo);
+                    })
+                    
+                })
+
+            }, 500);
+        })
+    })
+}
+
 
 
 
@@ -534,10 +554,6 @@ export function crtajSveStanice2(host){
             crtajStanicu2(stanica, host);
         })
         dodajListenerDugmicima();
+        napuniVoziloListener();
     })
-    // setTimeout(() => {
-        
-    // },1000);
-    
-
 }

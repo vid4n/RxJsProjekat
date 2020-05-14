@@ -3,58 +3,58 @@
     {
       "id": 1,
       "kapacitet": 1000,
-      "stanje": 980,
+      "stanje": 950,
       "cpj": 100,
-      "zarada": 311600
+      "zarada": 314600
     },
     {
       "id": 2,
       "kapacitet": 1100,
-      "stanje": 1100,
+      "stanje": 1045,
       "cpj": 110,
-      "zarada": 50490
+      "zarada": 56540
     },
     {
       "id": 3,
       "kapacitet": 1200,
-      "stanje": 878,
+      "stanje": 820,
       "cpj": 100,
-      "zarada": 11100
+      "zarada": 17100
     },
     {
       "id": 4,
       "kapacitet": 1500,
-      "stanje": 303,
+      "stanje": 260,
       "cpj": 90,
-      "zarada": 53280
+      "zarada": 56880
     },
     {
       "id": 5,
       "kapacitet": 1500,
-      "stanje": 325,
+      "stanje": 285,
       "cpj": 90,
-      "zarada": 20700
+      "zarada": 24300
     },
     {
       "id": 6,
       "kapacitet": 1400,
-      "stanje": 1400,
+      "stanje": 1280,
       "cpj": 90,
-      "zarada": 9000
+      "zarada": 19800
     },
     {
       "id": 7,
       "kapacitet": 1000,
-      "stanje": 900,
+      "stanje": 790,
       "cpj": 90,
-      "zarada": 9000
+      "zarada": 18900
     },
     {
       "id": 8,
       "kapacitet": 1900,
-      "stanje": 1880,
+      "stanje": 1870,
       "cpj": 90,
-      "zarada": 25600
+      "zarada": 26500
     },
     {
       "id": 9,
@@ -68,22 +68,22 @@
     {
       "id": 1,
       "kapacitet": 110,
-      "stanje": 50
+      "stanje": 90
     },
     {
       "id": 2,
       "kapacitet": 110,
-      "stanje": 100
+      "stanje": 110
     },
     {
       "id": 3,
       "kapacitet": 100,
-      "stanje": 10
+      "stanje": 25
     },
     {
       "id": 4,
       "kapacitet": 90,
-      "stanje": 70
+      "stanje": 55
     },
     {
       "id": 5,
@@ -93,7 +93,7 @@
     {
       "id": 6,
       "kapacitet": 85,
-      "stanje": 10
+      "stanje": 70
     },
     {
       "id": 7,

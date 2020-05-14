@@ -1,7 +1,7 @@
 import { getStanicaById, getStanice, mozeSeIzvrsitiPunjenje, odrediCenu } from "../services/StanicaService";
 import { map, take, takeUntil, switchMap, debounceTime,  } from "rxjs/operators";
 import { Stanica } from "../models/Stanica";
-import { getVoziloById, getVozila, voziloMozeDaPrimi } from "../services/VoziloService";
+import { getVoziloById } from "../services/VoziloService";
 import { obaviPunjenje, puniZaPet, puniStanicuDoVrha, prazniVozilo } from "../services/UpdateService";
 import { interval, from, timer, fromEvent, Observable, merge  } from "rxjs";
 import { Vozila } from "../models/Vozila";
@@ -190,7 +190,7 @@ export function crtajStanicu(id: number, host: HTMLDivElement): void{
     })
 }
 
-function crtajBaterijuStanice(idStanice: number , host: HTMLDivElement){
+function crtajBaterijuStanice(idStanice: number , host: HTMLDivElement): void{
     getStanicaById(idStanice).subscribe((stanica: Stanica) => {
         let visina: number = (stanica.stanje / stanica.kapacitet) * 128;
         let visinaString: string = visina.toString() + "px";
@@ -247,7 +247,7 @@ export function drawStanicaRow(stanica: Stanica, host: HTMLDivElement): void{
 
     const stanicaRow: HTMLTableRowElement = document.createElement("tr");
 
-    let atributi = [stanica.id, stanica.kapacitet, stanica.stanje, stanica.cpj, stanica.zarada];
+    let atributi: Array<number> = [stanica.id, stanica.kapacitet, stanica.stanje, stanica.cpj, stanica.zarada];
 
     atributi.forEach(el => {
         const podatak: HTMLTableDataCellElement = document.createElement("td");
@@ -437,7 +437,7 @@ export function crtajStanicu2(stanica:Stanica, host: HTMLDivElement): void {
     
 }
 
-function dodajListenerDugmicima(){
+function dodajListenerDugmicima(): void{
     let buttons:NodeListOf<Element> = document.querySelectorAll(".proveriButton");
     buttons.forEach((button)=>{
         
@@ -483,12 +483,12 @@ function dodajListenerDugmicima(){
     })
 }
 
-export function napuniVoziloListener(){
+export function napuniVoziloListener(): void{
     let buttons:NodeListOf<Element> = document.querySelectorAll(".napuniVozilo");
     buttons.forEach((button) => {
         button.addEventListener("click", (event:Event) => {
             event.preventDefault(); 
-            let idStanice = parseInt(button.getAttribute("data-id"));
+            let idStanice: number = parseInt(button.getAttribute("data-id"));
 
             let inputId: HTMLInputElement =  document.getElementById("inputID" + idStanice) as HTMLInputElement;
             let idVozilaString: string = inputId.value;
@@ -496,7 +496,7 @@ export function napuniVoziloListener(){
 
             let inputKolicina:HTMLInputElement = document.getElementById("inputKolicina" + idStanice) as HTMLInputElement;
             let inputKolicinaString: string = inputKolicina.value;
-            let kolicina = parseInt(inputKolicinaString);
+            let kolicina:number = parseInt(inputKolicinaString);
             kolicina = kolicina - (kolicina % 5);
             inputKolicina.value= kolicina.toString();
 
@@ -521,7 +521,7 @@ export function napuniVoziloListener(){
             
 
             //obaviPunjenje(idStanice, idVozila, kolicina);
-            const timerPregrevanje = timer(30000);
+            const timerPregrevanje: Observable<number> = timer(30000);
            
             setTimeout(() => {
                 let napunjeno: number = 0;
@@ -551,7 +551,7 @@ export function napuniVoziloListener(){
     })
 }
 
-export function napuniStanicuListener(){
+export function napuniStanicuListener(): void{
     let buttons:NodeListOf<Element> = document.querySelectorAll(".napuniStanicu");
     buttons.forEach((button) => {
         button.addEventListener("click", (event:Event) => {
@@ -568,7 +568,7 @@ export function napuniStanicuListener(){
     })
 }
 
-export function showView2(host){
+export function showView2(host): void{
     host.innerHTML = "";
     const divSveStanice: HTMLDivElement = document.createElement("div");
     divSveStanice.className = "divSveStanice";
@@ -601,7 +601,7 @@ export function showView2(host){
 
 }
 
-export function crtajVrhStranice(host){
+export function crtajVrhStranice(host): void{
     host.innerHTML = 
     `<div class="mr-auto p-2 topDiv" id="searchDiv" >
         <button type="submit" id="prikaziHome" class="btn btn-primary mb-2 prikaziHome" >Home</button>
@@ -670,7 +670,7 @@ export function crtajVrhStranice(host){
       });
 }
 
-export function praviNizDugmica(){
+export function praviNizDugmica(): HTMLElement[]{
     let nizDugmica:Array<HTMLElement> = new Array<HTMLButtonElement>();
     nizDugmica.push(document.getElementById("proveriButton1"));
     nizDugmica.push(document.getElementById("proveriButton2"));
@@ -680,7 +680,7 @@ export function praviNizDugmica(){
     return nizDugmica;
 }
 
-function dodajListenereDugmadima(dugmad, idStanice){
+function dodajListenereDugmadima(dugmad, idStanice): void{
     dugmad.forEach(dugme => {
         dugme.addEventListener("click", (event: Event) => {
         event.preventDefault();
@@ -692,7 +692,7 @@ function dodajListenereDugmadima(dugmad, idStanice){
     })
 }
 
-export function crtajSveStanice2(host){
+export function crtajSveStanice2(host): void{
     getStanice().subscribe((stanice: Array<Stanica>) => {
         stanice.map((stanica: Stanica) => {
             crtajStanicu2(stanica, host);

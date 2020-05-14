@@ -2,7 +2,7 @@ import { Stanica } from "../models/Stanica";
 import { Vozila } from "../models/Vozila";
 import { getStanicaById, mozeSeIzvrsitiPunjenje } from "./StanicaService";
 import { getVoziloById } from "./VoziloService";
-import { showView, showView2, crtajBaterijuVozila } from "../draw/drawStanica";
+import { crtajBaterijuVozila } from "../draw/drawStanica";
 
 const stanicaURL: string = "http://localhost:3000/stanice/";
 const vozilaURL: string = "http://localhost:3000/vozila/";
@@ -25,10 +25,8 @@ export function obaviPunjenje(
         updatedId = refStanica.id;
         updatedKapacitet = refStanica.kapacitet;
         updatedStanje = refStanica.stanje - kolicina;
-        //updatedStanje = refStanica.stanje - 5;  
         updatedCpj = refStanica.cpj;
         updatedZarada = refStanica.zarada + kolicina * refStanica.cpj;
-        //updatedZarada = refStanica.zarada + 5 * refStanica.cpj;
 
         fetch(`${stanicaURL}${idStanice}`, {
           method: "put",
@@ -45,26 +43,6 @@ export function obaviPunjenje(
           }),
         })
       });
-
-    //   getVoziloById(idVozila).subscribe((refVozilo: Vozila) => {
-    //     updatedIdV = refVozilo.id;
-    //     updatedKapacitetV = refVozilo.kapacitet;
-    //     updatedStanjeV = refVozilo.stanje + kolicina;
-    //     //updatedStanjeV = refVozilo.stanje + 5;
-
-    //     fetch(`${vozilaURL}${idVozila}`, {
-    //       method: "put",
-    //       headers: {
-    //         Accept: "application/json",
-    //         "Content-Type": "application/json",
-    //       },
-    //       body: JSON.stringify({
-    //         id: updatedIdV,
-    //         kapacitet: updatedKapacitetV,
-    //         stanje: updatedStanjeV,
-    //       }),
-    //     })
-    //   });
     }
     else{
         console.log("Nisu ispunjeni uslovi");
@@ -75,7 +53,7 @@ export function obaviPunjenje(
 export function puniZaPet(
     idStanice: number,
     idVozila: number,
-    kolicina: number){
+    kolicina: number): void{
     mozeSeIzvrsitiPunjenje(idStanice, idVozila, kolicina).subscribe((moze) => {
         var updatedIdV: number;
         var updatedKapacitetV: Number;
@@ -111,7 +89,7 @@ export function puniZaPet(
     })
 }
 
-export function puniStanicuDoVrha(id){
+export function puniStanicuDoVrha(id: number): void{
     var updatedId: Number;
     var updatedKapacitet: Number;
     var updatedStanje: Number;

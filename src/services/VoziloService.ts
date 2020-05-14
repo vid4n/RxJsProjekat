@@ -1,5 +1,4 @@
 import { Observable, from } from "rxjs";
-import { retry } from "rxjs/operators";
 import { Vozila } from "../models/Vozila";
 
 const dbURL: string = "http://localhost:3000/";

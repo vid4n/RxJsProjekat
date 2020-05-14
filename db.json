@@ -3,107 +3,107 @@
     {
       "id": 1,
       "kapacitet": 1000,
-      "stanje": 233,
+      "stanje": 980,
       "cpj": 100,
-      "zarada": 148100
+      "zarada": 311600
     },
     {
       "id": 2,
       "kapacitet": 1100,
-      "stanje": 221,
+      "stanje": 1100,
       "cpj": 110,
-      "zarada": 25190
+      "zarada": 50490
     },
     {
       "id": 3,
       "kapacitet": 1200,
-      "stanje": 189,
+      "stanje": 878,
       "cpj": 100,
       "zarada": 11100
     },
     {
       "id": 4,
       "kapacitet": 1500,
-      "stanje": 638,
+      "stanje": 303,
       "cpj": 90,
-      "zarada": 50580
+      "zarada": 53280
     },
     {
       "id": 5,
       "kapacitet": 1500,
-      "stanje": 98,
+      "stanje": 325,
       "cpj": 90,
-      "zarada": 9000
+      "zarada": 20700
     },
     {
       "id": 6,
       "kapacitet": 1400,
-      "stanje": 366,
+      "stanje": 1400,
       "cpj": 90,
       "zarada": 9000
     },
     {
       "id": 7,
       "kapacitet": 1000,
-      "stanje": 960,
+      "stanje": 900,
       "cpj": 90,
-      "zarada": 0
+      "zarada": 9000
     },
     {
       "id": 8,
       "kapacitet": 1900,
-      "stanje": 1211,
+      "stanje": 1880,
       "cpj": 90,
-      "zarada": 0
+      "zarada": 25600
     },
     {
       "id": 9,
       "kapacitet": 1500,
-      "stanje": 246,
+      "stanje": 525,
       "cpj": 90,
-      "zarada": 9000
+      "zarada": 13500
     }
   ],
   "vozila": [
     {
       "id": 1,
-      "kapacitet": 100,
-      "stanje": 99
+      "kapacitet": 110,
+      "stanje": 50
     },
     {
       "id": 2,
       "kapacitet": 110,
-      "stanje": 109
+      "stanje": 100
     },
     {
       "id": 3,
       "kapacitet": 100,
-      "stanje": 56
+      "stanje": 10
     },
     {
       "id": 4,
       "kapacitet": 90,
-      "stanje": 90
+      "stanje": 70
     },
     {
       "id": 5,
       "kapacitet": 80,
-      "stanje": 30
+      "stanje": 0
     },
     {
       "id": 6,
       "kapacitet": 85,
-      "stanje": 85
+      "stanje": 10
     },
     {
       "id": 7,
       "kapacitet": 100,
-      "stanje": 0
+      "stanje": 11
     },
     {
       "id": 8,
       "kapacitet": 100,
-      "stanje": 100
+      "stanje": 70
     }
   ]
 }

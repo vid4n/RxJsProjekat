@@ -1,9 +1,9 @@
 import { getStanicaById, getStanice, mozeSeIzvrsitiPunjenje, odrediCenu } from "../services/StanicaService";
-import { map, take, takeUntil } from "rxjs/operators";
+import { map, take, takeUntil, switchMap, debounceTime,  } from "rxjs/operators";
 import { Stanica } from "../models/Stanica";
-import { getVoziloById } from "../services/VoziloService";
-import { obaviPunjenje, puniZaPet } from "../services/UpdateService";
-import { interval, from, timer } from "rxjs";
+import { getVoziloById, getVozila, voziloMozeDaPrimi } from "../services/VoziloService";
+import { obaviPunjenje, puniZaPet, puniStanicuDoVrha, prazniVozilo } from "../services/UpdateService";
+import { interval, from, timer, fromEvent, Observable, merge  } from "rxjs";
 import { Vozila } from "../models/Vozila";
 
 export function crtajStanicu(id: number, host: HTMLDivElement): void{
@@ -55,7 +55,6 @@ export function crtajStanicu(id: number, host: HTMLDivElement): void{
         const povecajKapacitetButton: HTMLButtonElement = document.createElement("button");
         povecajKapacitetButton.innerHTML = "Povecaj";
         povecajKapacitetButton.onclick = (ev) => {
-        console.log("Povecavanje kapaciteta");
         }
 
         kapacitetStaniceDiv.appendChild(kapacitetLabel);
@@ -67,7 +66,6 @@ export function crtajStanicu(id: number, host: HTMLDivElement): void{
         const napuniStanicuDugme: HTMLButtonElement = document.createElement("button");
         napuniStanicuDugme.innerHTML = "Napuni";
         napuniStanicuDugme.onclick = (ev) =>{
-            console.log("Punjenje stanice...");
         }
 
         stanjeStaniceDiv.appendChild(stanjeLabel);
@@ -79,7 +77,6 @@ export function crtajStanicu(id: number, host: HTMLDivElement): void{
         const zameniCenuButton: HTMLButtonElement = document.createElement("button");
         zameniCenuButton.innerHTML = "Zameni";
         zameniCenuButton.onclick = (ev) => {
-            console.log("Menjanje cene");
         }
 
         cenaStaniceDiv.appendChild(cenaLabel);
@@ -94,7 +91,6 @@ export function crtajStanicu(id: number, host: HTMLDivElement): void{
         const zaradaButton: HTMLButtonElement = document.createElement("button");
         zaradaButton.innerHTML = "Preuzmi";
         zaradaButton.onclick = (ev) => {
-            console.log("Preuzimanje zarade...")
         }
         zaradaStaniceDiv.appendChild(zaradaLabel);
         zaradaStaniceDiv.appendChild(zaradaButton);
@@ -171,7 +167,6 @@ export function crtajStanicu(id: number, host: HTMLDivElement): void{
         checkButtonVozilo.innerHTML = "Proveri  ";
         checkButtonVozilo.onclick = (ev) => {
             //crtajBaterijuVozila(stanica.id.toString(), baterijaDiv);
-            console.log("Proveravam...");
 
         }
         buttonDiv.appendChild(checkButtonVozilo);
@@ -184,7 +179,6 @@ export function crtajStanicu(id: number, host: HTMLDivElement): void{
             mozeSeIzvrsitiPunjenje(stanica.id, parseInt(idInputVozilo.value), kolicinaZaPunjenje)
             .subscribe(moze => {
                 if(moze){
-                    console.log("Moze")
                     obaviPunjenje(stanica.id, parseInt(idInputVozilo.value), kolicinaZaPunjenje);
                 }
                 else console.log("Ne moze da se napuni toliko energije");
@@ -196,10 +190,30 @@ export function crtajStanicu(id: number, host: HTMLDivElement): void{
     })
 }
 
-export function crtajBaterijuVozila(idVozila: number, host: HTMLDivElement): void { 
+function crtajBaterijuStanice(idStanice: number , host: HTMLDivElement){
+    getStanicaById(idStanice).subscribe((stanica: Stanica) => {
+        let visina: number = (stanica.stanje / stanica.kapacitet) * 128;
+        let visinaString: string = visina.toString() + "px";
+        let boja: string;
+        if(visina > 79)
+            boja = "#33ff99";
+        else{
+            if(visina > 35  )
+                boja = "#ffff4d";
+            else    
+                boja = "#ff5c33";
+        }
+
+        host.style.height = visinaString;
+        host.style.backgroundColor = boja;
+
+        const labelaStanje:HTMLLabelElement = document.getElementById("stanje" + stanica.id) as HTMLLabelElement;
+        labelaStanje.innerHTML = stanica.stanje.toString();
+    })
+}
+
+export function crtajBaterijuVozila(idVozila: number, host: HTMLDivElement): void {  
     
-        
-        console.log(idVozila);
         getVoziloById(idVozila).subscribe(vozilo => {
             
     
@@ -222,6 +236,8 @@ export function crtajBaterijuVozila(idVozila: number, host: HTMLDivElement): voi
             host.style.marginLeft = "10px";
             host.style.borderRadius = "6%";
         })
+
+       
     
 }
 
@@ -256,12 +272,14 @@ export function crtajSveStanice(host: HTMLElement): void{
 export function crtajTabeluStanica(host: HTMLElement){
 
     const tabelaStanica: HTMLTableElement = document.createElement("table");
+    tabelaStanica.className="table";
 
     host.appendChild(tabelaStanica);
     
     let kolone: string[] = ["ID", "Kapacitet", "Stanje", "Cena", "Zarada"];
     
-    const hederTabele = document.createElement("tr");
+    const hederTabele = document.createElement("thead");
+    hederTabele.className = "heder";
     
     kolone.forEach((el: string) => {
         const kolona: HTMLTableHeaderCellElement = document.createElement("th");
@@ -272,9 +290,12 @@ export function crtajTabeluStanica(host: HTMLElement){
     
     tabelaStanica.appendChild(hederTabele);
 
+    const bodyTabele = document.createElement("tbody");
+    tabelaStanica.appendChild(bodyTabele);
+
     getStanice().subscribe((stanice) => {
             stanice. map((stanica: Stanica) => {
-            drawStanicaRow(stanica,tabelaStanica);
+            drawStanicaRow(stanica, bodyTabele);
         })
     })
 }
@@ -289,7 +310,7 @@ export function showView(host){
 
 export function crtajStanicu2(stanica:Stanica, host: HTMLDivElement): void {
 
-    let visina: number = (stanica.stanje / stanica.kapacitet) * 160;
+    let visina: number = (stanica.stanje / stanica.kapacitet) * 128;
     let visinaString: string = visina.toString() + "px";
     let boja: string;
     if(visina > 79)
@@ -317,41 +338,54 @@ export function crtajStanicu2(stanica:Stanica, host: HTMLDivElement): void {
         <div class="form-group mb-2 labela">
             <label>Kapacitet</label>     
         </div>
-        <div class="form-group mx-sm-3 mb-2">
-            <input type="number" class="form-control" id="inputKapacitet" placeholder="kWh">
+        <div class="form-group mx-sm-3 mb-2 srednji">
+            <label> ${stanica.kapacitet}</label>
         </div>
-        <button type="submit" class="btn btn-primary mb-2" id="btnKapacitet">Dodaj</button>
+        <div class="form-group mx-sm-3 mb-2 desni">
         </div>
-
-        <div class="red">
-        <div class="form-group mb-2 labela">
-            <label>Stanje</label>     
-        </div>
-        <div class="form-group mx-sm-3 mb-2">
-            <input type="number" class="form-control" id="inputStanje" placeholder="kWh">
-        </div>
-        <button type="submit" class="btn btn-primary mb-2">Napuni</button>
         </div>
 
         <div class="red">
         <div class="form-group mb-2 labela">
             <label>Cena</label>     
         </div>
-        <div class="form-group mx-sm-3 mb-2">
-            <input type="number" class="form-control" id="inputCena" placeholder="RSD">
+        <div class="form-group mx-sm-3 mb-2 srednji">
+            <label>${stanica.cpj}</label>
         </div>
-        <button type="submit" class="btn btn-primary mb-2">Zameni</button>
+        <div class="form-group mx-sm-3 mb-2 desni">
+        </div>
         </div>
 
         <div class="red">
         <div class="form-group mb-2 labela">
             <label>Zarada</label>     
         </div>
-        <button type="submit" class="btn btn-primary mb-2">Preuzmi</button>
+        <div class="form-group mx-sm-3 mb-2 srednji">
+            <label>${stanica.zarada}</label>
         </div>
+        <div class="form-group mx-sm-3 mb-2 desni">
+        </div>
+    </div>
+
+        <div class="red">
+            <div class="form-group mb-2 labela">
+                <label >Stanje</label>     
+            </div>
+            <div class="form-group mx-sm-3 mb-2 srednji">
+                <label id="stanje${stanica.id}">${stanica.stanje}</label>
+            </div>
+            <button type="submit" id="napuniStanicu${stanica.id}" class="btn btn-primary mb-2 napuniStanicu" data-id="${stanica.id.toString()}">Napuni</button>
         </div>
 
-        <div class="stanicaBaterija" style = "height: ${visinaString}; background-color: ${boja};" >
+        
+
+       
+
+
+
+        </div>
+
+        <div class="stanicaBaterija" style="height: ${visinaString}; background-color: ${boja}" id="stanicaBaterija${stanica.id.toString()}">
 
         </div>
         </div>
@@ -389,9 +423,9 @@ export function crtajStanicu2(stanica:Stanica, host: HTMLDivElement): void {
                         <label id="labelCena${stanica.id.toString()}">Cena</label>     
                     </div>
                     <div class="fakeInput" id="fakeInput${stanica.id.toString()}">
-                        <div id="proveriButton${stanica.id.toString()}" data-id="${stanica.id.toString()}" class=" proveriButton btn btn-primary mb-2">Proveri</div>
+                        <div id="proveriButton${stanica.id.toString()}" data-id="${stanica.id.toString()}" class=" proveriButton btn btn-primary mb-2 srednji">Proveri</div>
                     </div>
-                    <button type="submit" id="napuniVozilo${stanica.id.toString()}" class="btn btn-primary mb-2 napuniVozilo" data-id="${stanica.id.toString()}">Napuni</button>
+                    <button type="submit" id="napuniVozilo${stanica.id.toString()}" class="btn btn-primary mb-2  napuniVozilo" data-id="${stanica.id.toString()}">Napuni</button>
                 </div>  
             </div>
 
@@ -416,10 +450,17 @@ function dodajListenerDugmicima(){
                 let idVozila: number = parseInt(idVozilaString);
 
                 let inputKolicina:HTMLInputElement = document.getElementById("inputKolicina" + idStanice) as HTMLInputElement;
+
                 let inputKolicinaString: string = inputKolicina.value;
                 let kolicina = parseInt(inputKolicinaString);
+                kolicina = kolicina - (kolicina % 5);
+                inputKolicina.value = kolicina.toString();
 
                 const divPoruke: HTMLDivElement = document.getElementById("poruka" + idStanice) as HTMLDivElement;
+
+                const bat:HTMLDivElement = document.getElementById("voziloBaterija" + idStanice)as HTMLDivElement;
+                crtajBaterijuVozila(idVozila, bat);
+                
 
                 if(idVozilaString && inputKolicinaString){
                     divPoruke.innerHTML ="";
@@ -447,8 +488,6 @@ export function napuniVoziloListener(){
     buttons.forEach((button) => {
         button.addEventListener("click", (event:Event) => {
             event.preventDefault(); 
-
-            event.preventDefault(); 
             let idStanice = parseInt(button.getAttribute("data-id"));
 
             let inputId: HTMLInputElement =  document.getElementById("inputID" + idStanice) as HTMLInputElement;
@@ -458,8 +497,13 @@ export function napuniVoziloListener(){
             let inputKolicina:HTMLInputElement = document.getElementById("inputKolicina" + idStanice) as HTMLInputElement;
             let inputKolicinaString: string = inputKolicina.value;
             let kolicina = parseInt(inputKolicinaString);
+            kolicina = kolicina - (kolicina % 5);
+            inputKolicina.value= kolicina.toString();
 
             let zaPunjenje:number;
+
+            const batStanice:HTMLDivElement = document.getElementById("stanicaBaterija" + idStanice) as HTMLDivElement;
+
 
             getVoziloById(idVozila).subscribe((vozilo:Vozila) => {
                 let slobodno:number = vozilo.kapacitet - vozilo.stanje;
@@ -467,12 +511,15 @@ export function napuniVoziloListener(){
                     zaPunjenje = slobodno;
                 else zaPunjenje = kolicina;
 
-                if(zaPunjenje > 5)
-                    obaviPunjenje(idStanice, idVozila, zaPunjenje);
+                if(zaPunjenje > 5){
+                    obaviPunjenje(idStanice, idVozila, zaPunjenje);  
+                    setTimeout(() => {
+                        crtajBaterijuStanice(idStanice, batStanice);
+                    },500);
+                }
             })
             
 
-            console.log(idStanice, idVozila, kolicina);
             //obaviPunjenje(idStanice, idVozila, kolicina);
             const timerPregrevanje = timer(30000);
            
@@ -480,7 +527,6 @@ export function napuniVoziloListener(){
                 let napunjeno: number = 0;
                 let zaTake: number = zaPunjenje / 5;
 
-                console.log("Za take: " + zaTake);
 
                 interval(1000)            
                 .pipe(
@@ -493,9 +539,9 @@ export function napuniVoziloListener(){
                     obs.subscribe((vozilo: Vozila) => {
                         
                         puniZaPet(idStanice, idVozila, zaPunjenje);
+                        
                         napunjeno+=5;
                         zaPunjenje -= 5;
-                        console.log(vozilo);
                     })
                     
                 })
@@ -505,8 +551,22 @@ export function napuniVoziloListener(){
     })
 }
 
+export function napuniStanicuListener(){
+    let buttons:NodeListOf<Element> = document.querySelectorAll(".napuniStanicu");
+    buttons.forEach((button) => {
+        button.addEventListener("click", (event:Event) => {
+            event.preventDefault(); 
+            let idStanice = parseInt(button.getAttribute("data-id"));
 
-
+            puniStanicuDoVrha(idStanice);
+            const batStanice:HTMLDivElement = document.getElementById("stanicaBaterija" + idStanice) as HTMLDivElement;
+            setTimeout(() => {
+                crtajBaterijuStanice(idStanice, batStanice);
+            }, 500)
+            
+        })
+    })
+}
 
 export function showView2(host){
     host.innerHTML = "";
@@ -515,8 +575,99 @@ export function showView2(host){
     host.appendChild(divSveStanice);
 
    
-
     crtajSveStanice2(divSveStanice);
+    setTimeout(()=>{
+        let buttons:NodeListOf<Element> = document.querySelectorAll(".napuniVozilo");
+        let clicks:Array<Observable<any>> = new Array<Observable<any>>();
+        buttons.forEach((button: HTMLButtonElement) => {
+            clicks.push(fromEvent(button, "click"));
+        })
+
+        // let allClicks;
+        // clicks.forEach((click) => {
+        //     allClicks = merge(click);
+        // })
+        merge(clicks).subscribe((obs)=>{
+            obs.subscribe(click => {
+                const lbl:HTMLLabelElement = document.getElementById("lblInfo") as HTMLLabelElement;
+                let idStanice = click.path[0].getAttribute("data-id");
+                lbl.innerHTML = "Stanica " + idStanice +  " prima novo vozilo";
+            })
+        })
+    },500);
+   
+
+       
+
+}
+
+export function crtajVrhStranice(host){
+    host.innerHTML = 
+    `<div class="mr-auto p-2 topDiv" id="searchDiv" >
+        <button type="submit" id="prikaziHome" class="btn btn-primary mb-2 prikaziHome" >Home</button>
+        <button type="submit" id="prikaziTabelu" class="btn btn-primary mb-2 prikaziTabelu" >Stanice</button>
+        <label class="lblTop" id="searchLabel">Proveri stanje stanice: </label>
+        <input id="searchInput" class="form-control srednji inputTop" />
+        <label class="lblTopProcenat" id="responseLabel" style="color: green;"></label>
+        
+        <button type="submit" id="prazniVozila" class="btn btn-primary mb-2 prazniVozila" >Prazni </button>
+        <input id="searchIDInput" class="form-control srednji inputIdTop" />
+        <label class="lblInfo" id="lblInfo" ></label>
+
+    </div>`
+
+    const searchInput: HTMLInputElement = document.getElementById("searchInput") as HTMLInputElement;
+    const responseLabel: HTMLLabelElement = document.getElementById("responseLabel") as HTMLLabelElement;
+    responseLabel.style.width = "100px";
+
+    
+
+
+    const prikazTebele:HTMLButtonElement = document.getElementById("prikaziTabelu") as HTMLButtonElement;
+    const prikazHome:HTMLButtonElement = document.getElementById("prikaziHome") as HTMLButtonElement;
+    const prazniVozila:HTMLButtonElement = document.getElementById("prazniVozila") as HTMLButtonElement;
+
+    setTimeout(() => {
+        prikazTebele.addEventListener("click", (event: Event) => {
+            document.getElementById("startDiv").innerHTML ="";
+            crtajTabeluStanica(document.getElementById("startDiv"));
+        })
+
+        prikazHome.addEventListener("click", (event: Event) => {
+            document.getElementById("startDiv").innerHTML ="";
+            showView2(document.getElementById("startDiv"));
+        })
+
+        prazniVozila.addEventListener("click" , (event:Event) => {
+            const searchIDInput: HTMLInputElement = document.getElementById("searchIDInput") as HTMLInputElement;
+            let idString:string = searchIDInput.value;
+            let idZaPraznjenje: number = parseInt(searchIDInput.value);
+            prazniVozilo(idZaPraznjenje); 
+        })
+    },500);
+
+    fromEvent(searchInput, 'input')
+      .pipe(
+        debounceTime(500),
+        map((ev: any) => ev.target.value),
+        switchMap((id: number) =>
+          getStanicaById(id)
+        )
+      )
+      .subscribe((stanica: Stanica) => {
+        if(stanica.id){
+            responseLabel.innerHTML = ((stanica.stanje/stanica.kapacitet)*100).toString() +"%";
+            responseLabel.style.color = "green";
+        }
+        else{
+            responseLabel.innerHTML = "Pogresan ID";
+            responseLabel.style.color = "red";
+        }
+
+        if (searchInput.value == '') {
+          responseLabel.innerHTML = '';
+        }
+      });
 }
 
 export function praviNizDugmica(){
@@ -526,24 +677,17 @@ export function praviNizDugmica(){
     nizDugmica.push(document.getElementById("proveriButton3"));
     nizDugmica.push(document.getElementById("proveriButton4"));
 
-    console.log(nizDugmica);
     return nizDugmica;
 }
 
 function dodajListenereDugmadima(dugmad, idStanice){
-    console.log(dugmad);
     dugmad.forEach(dugme => {
-        console.log(dugme);
         dugme.addEventListener("click", (event: Event) => {
-        console.log(dugme);
         event.preventDefault();
         let input:HTMLInputElement = document.createElement("input");
         input = document.getElementById("inputID" + idStanice.toString()) as HTMLInputElement;
-        console.log(input);
-        console.log(input.value);
         let idVozilaString: string = input.value;
         let idVozila = parseInt(idVozilaString);
-        console.log(idVozila);
         })
     })
 }
@@ -552,8 +696,11 @@ export function crtajSveStanice2(host){
     getStanice().subscribe((stanice: Array<Stanica>) => {
         stanice.map((stanica: Stanica) => {
             crtajStanicu2(stanica, host);
+            const batDiv:HTMLDivElement = document.getElementById("stanicaBaterija" + stanica.id) as HTMLDivElement;
         })
         dodajListenerDugmicima();
         napuniVoziloListener();
+        napuniStanicuListener();
     })
 }
+

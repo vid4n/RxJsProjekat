@@ -12,20 +12,14 @@ export function obaviPunjenje(
   idVozila: number,
   kolicina: number
 ): void {
-    console.log("Kolicina da se smanji iz stanice " + kolicina);
     
   mozeSeIzvrsitiPunjenje(idStanice, idVozila, kolicina).subscribe((moze) => {
     if (moze) {
-      console.log("Punjenje u toku");
       var updatedId: Number;
       var updatedKapacitet: Number;
       var updatedStanje: Number;
       var updatedCpj: Number;
       var updatedZarada: Number;
-
-    //   var updatedIdV: number;
-    //   var updatedKapacitetV: Number;
-    //   var updatedStanjeV: Number;
 
       getStanicaById(idStanice).subscribe((refStanica: Stanica) => {
         updatedId = refStanica.id;
@@ -117,3 +111,62 @@ export function puniZaPet(
     })
 }
 
+export function puniStanicuDoVrha(id){
+    var updatedId: Number;
+    var updatedKapacitet: Number;
+    var updatedStanje: Number;
+    var updatedCpj: Number;
+    var updatedZarada: Number;
+
+    getStanicaById(id).subscribe((refStanica:Stanica) => {
+        updatedId = refStanica.id;
+        updatedKapacitet = refStanica.kapacitet;
+        updatedStanje = refStanica.kapacitet;
+        updatedCpj = refStanica.cpj;
+        updatedZarada = refStanica.zarada;
+        
+        fetch(`${stanicaURL}${id}`, {
+            method: "put",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              id: updatedId,
+              kapacitet: updatedKapacitet,
+              stanje: updatedStanje,
+              cpj: updatedCpj,
+              zarada: updatedZarada,
+            }),
+          })
+    })
+}
+
+export function prazniVozilo(id: number){
+    var updatedIdV: number;
+    var updatedKapacitetV: Number;
+    var updatedStanjeV: Number;
+    getVoziloById(id).subscribe((refVozilo:Vozila) => {
+        updatedIdV = refVozilo.id;
+        updatedKapacitetV = refVozilo.kapacitet;
+        updatedStanjeV = 0;
+
+        izmeniVozilo(updatedIdV,updatedKapacitetV,updatedStanjeV, id);
+        
+    })   
+}
+
+function izmeniVozilo(updatedIdV,updatedKapacitetV,updatedStanjeV, id){
+    fetch(`${vozilaURL}${id}`, {
+        method: "put",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: updatedIdV,
+          kapacitet: updatedKapacitetV,
+          stanje: updatedStanjeV,
+        }),
+    })
+}

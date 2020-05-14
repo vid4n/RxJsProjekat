@@ -23,7 +23,6 @@ export function getVoziloById(id: number): Observable<any> {
 }
 
 export function voziloMozeDaPrimi(id:number, kolicina: number): Observable<any>{
-    console.log("Da li vozilo moze da primi: " + kolicina);
     return from(
         getVoziloById(id)
         .toPromise()

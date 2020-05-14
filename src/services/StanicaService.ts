@@ -57,7 +57,6 @@ export function odrediCenu(id:number, kolicina: number): Observable<any>{
         getStanicaById(id).toPromise()
         .then((stanica: Stanica) => {
             cena = stanica.cpj * kolicina;
-            console.log("Cena jeee " + cena);
             return cena;
             
         })
@@ -66,6 +65,7 @@ export function odrediCenu(id:number, kolicina: number): Observable<any>{
 
 
 }
+
 
 
 

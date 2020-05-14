@@ -29,6 +29,10 @@
     background-color: black;
 }
 
+.prikaziTabelu{
+    margin-right: 30px;
+}
+
 .inputStanicaDiv{
     height: 105px;
 }
@@ -43,6 +47,37 @@
     border-radius: 6%;
 }
 
+.topDiv{
+    margin-left: 30px;
+    display: flex;
+    flex-direction: row;
+    width: 1050px;
+    margin-bottom: 20px;
+    margin-top: 5px;
+}
+
+.lblInfo{
+    margin-left: 30px;
+    margin-top: 8px;
+}
+
+
+.inputTop{
+    margin-left: 30px;
+    margin-right: 15px;
+}
+
+
+.lblTop{
+    margin-top: 7px;
+}
+.lblTopProcenat{
+    margin-top: 7px;
+    margin-right: 50px;
+}
+
+
+
 .stanica{
     display: flex;
     flex-direction: row;
@@ -53,6 +88,14 @@
     flex-direction: row;
     justify-content: space-between;
 
+}
+
+.srednji{
+    width: 100px;
+}
+
+.desni{
+    width: 75px;
 }
 
 button{
@@ -103,7 +146,7 @@ hr{
 }
 
 .labela{
-    width: 100px;
+    width: 120px;
 }
 
 .fake{
@@ -114,6 +157,12 @@ hr{
     width:100px;
 }
 
+.heder{
+    background-color: #337ab7;
+    color: white;
+    height: 60px;
+}
+
 .divSveStanice{
     display: flex;;
     flex-direction: row;
@@ -122,4 +171,8 @@ hr{
 
 .voziloBaterija{
     widows: 50px;
+}
+
+.prazniVozila{
+    margin-left: 30px;
 }
